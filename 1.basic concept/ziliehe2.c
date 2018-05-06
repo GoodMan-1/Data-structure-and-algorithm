@@ -18,35 +18,36 @@ Sample Output:
 
 #include<stdio.h>
 const int maxnum=100000+10;
-int main() {
-  int n,i,A[maxnum];
-  scanf("%d",&n);
-  for(i=0;i<n;i++)
-  {
-   scanf("%d",&A[i]);
-  }
-int max=0,thisnum;
-int high,low,temp=0;
-  for(int i=0;i<n;i++)
-  {
-    thisnum=0;
-    for(int j=i;j<n;j++)
+int main()
+{
+    int n,i,A[maxnum];
+    scanf("%d",&n);
+    for(i=0; i<n; i++)
     {
-      thisnum+=A[j];
-      if(thisnum>max)
-      {
-        max=thisnum;
-        high=A[j];
-        low=A[i];
-      }
-     }
-   }
-
-  if(max==0)
-  {
-    high=A[n-1];
-    low=A[0];
-  }
-  printf("%d %d %d",max,low,high);
-  return 0;
+        scanf("%d",&A[i]);
+    }
+    int max=0,thisnum=0;
+    int high=A[0],low=A[0];
+    int ihigh=A[n-1],ilow=A[0];
+    for(i=0; i<n; i++)
+    {
+        if(thisnum>=0)
+        {
+            thisnum+=A[i];
+            high=A[i];
+        }
+        else
+        {
+            thisnum=A[i];
+            high=low=A[i];
+        }
+        if(thisnum>max || (thisnum==0 && ihigh==A[n-1]))
+        {
+            max=thisnum;
+            ihigh=high;
+            ilow=low;
+        }
+    }
+    printf("%d %d %d\n",max,ilow,ihigh);
+    return 0;
 }
