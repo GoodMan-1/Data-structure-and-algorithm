@@ -59,11 +59,14 @@ bool IsFull(Stack S,int M)
     Stack temp=(Stack)malloc(sizeof(struct SNode));
     temp->Next=NULL;
     temp=S->Next;
-    while(M-- && temp!=NULL)
+    while(temp!=NULL)
     {
         temp=temp->Next;
+        M--;
+        if(M==1)
+            break;
     }
-    if(M==0)
+    if(M==1)
         return true;
     else
         return false;
@@ -81,10 +84,10 @@ void Pop(Stack S)
 {
     PtrToSNode Top;
     int TopElem;
-        Top=S->Next;
-        TopElem=Top->Data;
-        S->Next=Top->Next;
-        free(Top);
+    Top=S->Next;
+    TopElem=Top->Data;
+    S->Next=Top->Next;
+    free(Top);
 }
 
 bool Judge(Stack S,int A[],int M,int N)
@@ -111,13 +114,14 @@ bool Judge(Stack S,int A[],int M,int N)
     else if(flag==0)
         return true;
 }
+
 int main()
 {
     Stack S;
     int M,N,K,i,j,A[1000];
     scanf("%d %d %d",&M,&N,&K);
     S=CreateStack(M);
-   for(j=0; j<K; j++)
+    for(j=0; j<K; j++)
     {
         for(i=1; i<=N; i++)
         {
