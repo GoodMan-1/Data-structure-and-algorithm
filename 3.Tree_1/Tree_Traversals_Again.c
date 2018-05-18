@@ -34,7 +34,7 @@ Sample Output:
 3 4 2 6 5 1
 */
 
-/*答案正确 堆栈数组存储，二叉树链表存储*/
+/*method 1 答案正确 堆栈数组存储，二叉树链表存储*/
 #include<stdio.h>
 #include<stdbool.h>
 #define MaxSize 30
@@ -138,7 +138,7 @@ int main()
     return 0;
 }
 
-/*段错误（原因:两个结构体）*/
+/*method 1 段错误（原因:两个结构体）*/
 #include<stdio.h>
 #include<stdbool.h>
 typedef struct TNode *Position;
@@ -262,5 +262,70 @@ int main()
     BinTree BT;
     BT=ReadTree();
     PostorderTraversal(BT);
+    return 0;
+}
+
+/*method 2 数组实现：已知二叉树的前序遍历，中序遍历，求后序遍历*/
+#include<stdio.h>
+#define MaxSize 30
+
+int Stack[MaxSize];     //堆栈数组
+int pre[MaxSize];       //前序遍历数组
+int in[MaxSize];       //中序遍历数组
+int post[MaxSize];      //后序遍历数组
+int top = -1;
+
+void Push(int BT)
+{
+    Stack[++top] = BT;
+}
+
+int Pop()
+{
+    return Stack[top--];
+}
+
+int PostorderTraversal(int preL,int inL,int postL,int n)
+{
+    int i,L,root,R;
+    if(n==0)
+        return;
+    if(n==1)
+    {
+        post[postL]=pre[preL];
+        return;
+    }
+    root=pre[preL];     //根节点为前序遍历的第一个节点
+    post[postL+n-1]=root;
+    for(i=0;i<n;i++)
+        if(in[inL+i]==root)     //中序遍历的根节点将数组分成左右两部分，分别对应左右子树
+            break;
+    L=i;                        //左子树节点个数
+    R=n-L-1;                    //右子树节点个数
+    PostorderTraversal(preL+1,inL,postL,L);              //递归解决左子树
+    PostorderTraversal(preL+L+1,inL+L+1,postL+L,R);     //递归解决右子树
+}
+
+int main()
+{
+    char s[5];
+    int i,data,N,pr=0,pi=0;
+    scanf("%d",&N);
+    for(i=0; i<2*N; i++)
+    {
+        scanf("%s",&s);
+        if(s[1]=='u')
+        {
+            scanf("%d",&data);
+            pre[pr++]=data;
+            Push(data);
+        }
+        else
+            in[pi++]=Pop();
+    }
+    PostorderTraversal(0,0,0,N);    //参数为三个数组最左边的数组位置，以及节点个数
+    printf("%d",post[0]);
+    for(i=1;i<N;i++)
+        printf(" %d",post[i]);
     return 0;
 }
